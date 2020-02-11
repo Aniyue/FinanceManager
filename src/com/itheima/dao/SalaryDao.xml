@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.dao.SalaryDao" >
+
+    <!--分页查询-->
+    <select id="getSalaryList" parameterType="Salary" resultType="Salary">
+        select *from salary
+        <where>
+            <if test="sid!=null and sid!='' ">
+                and  sid like  '%${sid}%'
+            </if>
+            <if test="sname!=null and sname!=0">
+                and  sname like  '%${sname}%'
+            </if>
+        </where>
+        ORDER BY  sid asc
+        limit #{currentPage},#{pageSize}
+    </select>
+    <!--查询数据总数-->
+    <select id="totalCount"  resultType="Integer">
+        select count(sid) from salary
+        <where>
+            <if test="sname!=null and sname!='' ">
+                and  sname like  '%${sname}%'
+            </if>
+            <if test="sid!=null and sid!='' ">
+                and  sid like  '%${sid}%'
+            </if>
+        </where>
+    </select>
+    <!--通过id删除薪资信息-->
+    <delete id="deleteSalary" parameterType="Integer" >
+        delete from salary where sid=#{sid}
+    </delete>
+    <!--添加薪资信息-->
+    <insert id="addSalary" parameterType="Salary" keyProperty="sid" useGeneratedKeys="true">
+        insert into salary (sid,sname,sdepart,sjob,sjiben,sjiaoshui,sjiaban,sbonus,sfine,stotal)
+        values(#{sid},#{sname},#{sdepart},#{sjob},#{sjiben},#{sjiaoshui},#{sjiaban},#{sbonus},#{sfine},#{stotal})
+    </insert>
+
+
+    <select id="findSalaryById"  parameterType="Integer" resultType="Salary" >
+        select * from salary where sid=#{sid}
+    </select>
+    <!--修改薪资信息-->
+    <update id="updateSalary" parameterType="Salary">
+        update salary
+        <set>
+            <if test="sid!=null and sid!=0">
+                sid=#{sid},
+            </if>
+            <if test="sname !=null and sname !=''">
+                sname=#{sname},
+            </if>
+            sdepart=#{sdepart},
+            <if test="sjob !=null and sjob !=''">
+                sjob=#{sjob},
+            </if>
+            sjiben=#{sjiben},
+            sjiaoshui=#{sjiaoshui},
+            sjiaban=#{sjiaban},
+          sbonus=#{sbonus},
+          sfine=#{sfine},
+          stotal=#{stotal}
+        </set>
+        where sid = #{sid}
+    </update>
+
+    <select id="getAll" resultType="Salary">
+        select * from salary;
+    </select>
+
+</mapper>

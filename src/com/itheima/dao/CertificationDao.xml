@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.dao.CertificationDao" >
+
+    <!--分页查询-->
+    <select id="getCertificationList" parameterType="Certification" resultType="Certification">
+        select *from certification
+        <where>
+            <if test="cid!=null and cid!='' ">
+                and  cid like  '%${cid}%'
+            </if>
+            <if test="cname!=null and cname!=0">
+                and  cname like  '%${cname}%'
+            </if>
+        </where>
+        ORDER BY  cid asc
+        limit #{currentPage},#{pageSize}
+    </select>
+    <!--查询数据总数-->
+    <select id="totalCount"  resultType="Integer">
+        select count(cid) from certification
+        <where>
+            <if test="cname!=null and cname!='' ">
+                and  cname like  '%${cname}%'
+            </if>
+            <if test="cid!=null and cid!='' ">
+                and  cid like  '%${cid}%'
+            </if>
+        </where>
+    </select>
+    <!--通过id删除凭证信息-->
+    <delete id="deleteCertification" parameterType="Integer" >
+        delete from certification where cid=#{cid}
+    </delete>
+    <!--添加凭证信息-->
+    <insert id="addCertification" parameterType="Certification" keyProperty="cid" useGeneratedKeys="true">
+        insert into certification (cid,cname,cemployee,camount,cdate,cstatus,ccomment)
+        values(#{cid},#{cname},#{cemployee},#{camount},#{cdate},#{cstatus},#{ccomment})
+    </insert>
+
+
+    <select id="findCertificationById"  parameterType="Integer" resultType="Certification" >
+        select * from certification where cid=#{cid}
+    </select>
+    <!--修改凭证信息-->
+    <update id="updateCertification" parameterType="Certification">
+        update certification
+        <set>
+            <if test="cid!=null and cid!=0">
+                cid=#{cid},
+            </if>
+            <if test="cname !=null and cname !=''">
+                cname=#{cname},
+            </if>
+            cemployee=#{cemployee},
+            <if test="camount !=null and camount !=''">
+                camount=#{camount},
+            </if>
+            cdate=#{cdate},
+            cstatus=#{cstatus},
+            ccomment=#{ccomment}
+        </set>
+        where cid = #{cid}
+    </update>
+
+    <select id="getAll" resultType="Certification">
+        select * from certification;
+    </select>
+
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.dao.RegionDao" >
+
+    <!--分页查询-->
+    <select id="getRegionList" parameterType="Region" resultType="Region">
+        select *from region
+        <where>
+            <if test="r_regionkey!=null and r_regionkey!='' ">
+                and  r_regionkey like  '%${r_regionkey}%'
+            </if>
+            <if test="r_name!=null and r_name!=0">
+                and  r_name like  '%${r_name}%'
+            </if>
+        </where>
+        ORDER BY  r_regionkey asc
+        limit #{currentPage},#{pageSize}
+    </select>
+    <!--查询数据总数-->
+    <select id="totalCount"  resultType="Integer">
+        select count(r_regionkey) from region
+        <where>
+            <if test="r_name!=null and r_name!='' ">
+                and  r_name like  '%${r_name}%'
+            </if>
+            <if test="r_regionkey!=null and r_regionkey!='' ">
+                and  r_regionkey like  '%${r_regionkey}%'
+            </if>
+        </where>
+    </select>
+    <!--通过id删除学生信息-->
+    <delete id="deleteRegion" parameterType="Integer" >
+        delete from region where r_regionkey=#{r_regionkey}
+    </delete>
+    <!--添加学生信息-->
+    <insert id="addRegion" parameterType="Region" keyProperty="r_regionkey" useGeneratedKeys="true">
+        insert into region (r_regionkey,r_name,r_comment,ps_supplycost,ps_comment)
+        values(#{r_regionkey},#{r_name},#{r_comment},#{ps_supplycost},#{ps_comment})
+    </insert>
+
+
+    <select id="findRegionById"  parameterType="Integer" resultType="Region" >
+        select * from region where r_regionkey=#{r_regionkey}
+    </select>
+    <!--修改学生信息-->
+    <update id="updateRegion" parameterType="Region">
+        update region
+        <set>
+            <if test="r_regionkey!=null and r_regionkey!=0">
+                r_regionkey=#{r_regionkey},
+            </if>
+            <if test="r_name !=null and r_name !=''">
+                r_name=#{r_name},
+            </if>
+            r_comment=#{r_comment},
+            <if test="ps_supplycost !=null and ps_supplycost !=''">
+                ps_supplycost=#{ps_supplycost},
+            </if>
+            ps_comment=#{ps_comment}
+        </set>
+        where r_regionkey = #{r_regionkey}
+    </update>
+
+    <select id="getAll" resultType="Region">
+        select * from region;
+    </select>
+
+</mapper>

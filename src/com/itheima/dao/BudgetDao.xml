@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.dao.BudgetDao" >
+
+    <!--分页查询-->
+    <select id="getBudgetList" parameterType="Budget" resultType="Budget">
+        select *from budget
+        <where>
+            <if test="bid!=null and bid!='' ">
+                and  bid like  '%${bid}%'
+            </if>
+            <if test="bname!=null and bname!=0">
+                and  bname like  '%${bname}%'
+            </if>
+        </where>
+        ORDER BY  bid asc
+        limit #{currentPage},#{pageSize}
+    </select>
+    <!--查询数据总数-->
+    <select id="totalCount"  resultType="Integer">
+        select count(bid) from budget
+        <where>
+            <if test="bname!=null and bname!='' ">
+                and  bname like  '%${bname}%'
+            </if>
+            <if test="bid!=null and bid!='' ">
+                and  bid like  '%${bid}%'
+            </if>
+        </where>
+    </select>
+    <!--通过id删除预算信息-->
+    <delete id="deleteBudget" parameterType="Integer" >
+        delete from budget where bid=#{bid}
+    </delete>
+    <!--添加预算信息-->
+    <insert id="addBudget" parameterType="Budget" keyProperty="bid" useGeneratedKeys="true">
+        insert into budget (bid,bname,bproject,bdepart,bcost,bbenefit,bdate,bcomment)
+        values(#{bid},#{bname},#{bproject},#{bdepart},#{bcost},#{bbenefit},#{bdate},#{bcomment})
+    </insert>
+
+
+    <select id="findBudgetById"  parameterType="Integer" resultType="Budget" >
+        select * from budget where bid=#{bid}
+    </select>
+    <!--修改学生信息-->
+    <update id="updateBudget" parameterType="Budget">
+        update budget
+        <set>
+            <if test="bid!=null and bid!=0">
+                bid=#{bid},
+            </if>
+            <if test="bname !=null and bname !=''">
+                bname=#{bname},
+            </if>
+            bproject=#{bproject},
+            <if test="bdepart !=null and bdepart !=''">
+                bdepart=#{bdepart},
+            </if>
+            bcost=#{bcost},
+          bbenefit=#{bbenefit},
+          bdate=#{bdate},
+          bcomment=#{bcomment}
+        </set>
+        where bid = #{bid}
+    </update>
+
+    <select id="getAll" resultType="Budget">
+        select * from budget;
+    </select>
+
+</mapper>
